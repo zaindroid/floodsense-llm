@@ -1,0 +1,22 @@
+# zorc app contract.
+#
+# A Meterless-compatible model gateway. It is not Nightshift; see README.md.
+# It holds no provider key: ai: true wires it to the platform's own gateway,
+# which owns the provider keys and fails over between them.
+name: floodsense-llm
+port: 8080
+memory_mb: 256
+
+domains:
+  - floodsense-llm.zaindroid.me
+
+database: false
+redis: false
+ai: true
+
+env:
+  # The bearer token our own callers present. The agents need the same value,
+  # so it is supplied at deploy time rather than generated where it could not
+  # be read back.
+  LLM_GATEWAY_KEY:
+    required: true
