@@ -35,6 +35,19 @@ The upstream substitutes its own model for the one requested, so `MODEL_FAST`
 and `MODEL_DEEP` are labels for the lane rather than a choice of model. What
 answered is in the response and on the trace.
 
+## It has to sit next to the upstream
+
+The platform's gateway is reachable only as `http://ai-gateway-internal:8080`
+on Coolify's Docker network, and that alias is per host. Pointing the agents
+at it directly from another node fails with
+`[Errno -3] Temporary failure in name resolution`, measured: every model call
+spent 9 s on three retries before falling back, which added about 70 s to a
+case run and bought nothing.
+
+So this gateway must be deployed on the **same node as the upstream**, which
+today is `servingz` -- pass `preferred_node: "servingz"`. On any other node it
+can reach nothing and there is no point deploying it.
+
 ## Running it
 
 | variable | |
